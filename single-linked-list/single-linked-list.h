@@ -73,7 +73,7 @@ class SingleLinkedList {
         // Оператор проверки итераторов на неравенство
         // Противоположен !=
         [[nodiscard]] bool operator!=(const BasicIterator<const Type>& rhs) const noexcept {
-            return this->node_ != rhs.node_;
+             return !(*this == rhs);
         }
 
         // Оператор сравнения итераторов (в роли второго аргумента итератор)
@@ -85,7 +85,7 @@ class SingleLinkedList {
         // Оператор проверки итераторов на неравенство
         // Противоположен !=
         [[nodiscard]] bool operator!=(const BasicIterator<Type>& rhs) const noexcept {
-            return this->node_ != rhs.node_;
+             return !(*this == rhs);
         }
 
         // Оператор прединкремента. После его вызова итератор указывает на следующий элемент списка
@@ -104,7 +104,7 @@ class SingleLinkedList {
         BasicIterator operator++(int) noexcept {
             assert(node_ != nullptr);
             auto old_value(*this);
-            node_ = node_->next_node;
+            ++(*this);
             return old_value;
         }
 
@@ -318,7 +318,9 @@ void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
 
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return lhs.GetSize() == rhs.GetSize() && std::equal(lhs.begin(), rhs.end(), rhs.begin());
+      if ( & lhs != &rhs && lhs.GetSize() != rhs.GetSize() ) { return false; } 
+	  return std::equal(lhs.begin(), rhs.end(), rhs.begin());
+	
  
 }
 
@@ -334,7 +336,7 @@ bool operator<(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& 
 
 template <typename Type>
 bool operator<=(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return (lhs < rhs || lhs == rhs);
+    return !(lhs > rhs);
 }
 
 template <typename Type>
@@ -344,5 +346,5 @@ bool operator>(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& 
 
 template <typename Type>
 bool operator>=(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return (rhs < lhs) || (lhs == rhs);
+     return !(lhs < rhs);
 }
